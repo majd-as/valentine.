@@ -1,1 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Be My Valentine</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
 
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    }
+
+    .card {
+      background: white;
+      padding: 30px 20px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .buttons {
+      margin-top: 30px;
+      position: relative;
+      height: 120px;
+    }
+
+    button {
+      padding: 12px 22px;
+      font-size: 16px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+    }
+
+    #yesBtn {
+      background: #ff4d6d;
+      color: white;
+    }
+
+    #noBtn {
+      background: #ccc;
+      color: #333;
+      position: absolute;
+      left: 50%;
+      top: 60px;
+      transform: translateX(-50%);
+    }
+
+    .result {
+      display: none;
+      font-size: 20px;
+      margin-top: 20px;
+      color: #ff4d6d;
+    }
+
+    .heart {
+      position: absolute;
+      bottom: -20px;
+      font-size: 24px;
+      animation: floatUp 3s linear forwards;
+      color: #ff4d6d;
+    }
+
+    @keyframes floatUp {
+      from {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-300px);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Would you like to be my Valentine? 💖</h1>
+
+    <div class="buttons">
+      <button id="yesBtn">Yes</button>
+      <button id="noBtn">No</button>
+    </div>
+
+    <div class="result" id="result">
+      I knew it! 💕
+    </div>
+  </div>
+
+  <script>
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const result = document.getElementById("result");
+    const buttons = document.querySelector(".buttons");
+
+    function moveNoButton() {
+      const maxX = buttons.clientWidth - noBtn.offsetWidth;
+      const maxY = buttons.clientHeight - noBtn.offsetHeight;
+
+      const randomX = Math.random() * maxX;
+      const randomY = Math.random() * maxY;
+
+      noBtn.style.left = randomX + "px";
+      noBtn.style.top = randomY + "px";
+    }
+
+    noBtn.addEventListener("touchstart", moveNoButton);
+    noBtn.addEventListener("mouseenter", moveNoButton);
+
+    yesBtn.addEventListener("click", () => {
+     \dbuttons.style.display = "none";
+      result.style.display = "block";
+
+      for (let i = 0; i < 15; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerText = "❤️";
+        heart.style.left = Math.random() * 100 + "%";
+        heart.style.animationDelay = Math.random() * 2 + "s";
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 3000);
+      }
+    });
+  </script>
+</body>
+</html>
