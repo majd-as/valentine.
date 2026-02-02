@@ -4,197 +4,264 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Be My Valentine</title>
-  <style>
-    :root { --pink:#ff3b7a; --pink2:#ff7aa8; --ink:#1b1b1b; }
 
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      background: radial-gradient(1200px 800px at 20% 10%, #ffe0ea 0%, transparent 60%),
-                  linear-gradient(135deg, #ff9a9e, #fad0c4);
+  <style>
+    :root{
+      --pink:#ff2d78;
+      --ink:#1b1b1b;
+    }
+
+    *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+    body{
+      margin:0;
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:18px;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color: var(--ink);
-      padding: 18px;
+      color:var(--ink);
+      background:
+        radial-gradient(1200px 800px at 20% 10%, #ffe0ea 0%, transparent 60%),
+        linear-gradient(135deg, #ff9a9e, #fad0c4);
+      overflow:hidden;
     }
 
     .card{
-      width: min(420px, 100%);
+      width:min(420px, 100%);
       background: rgba(255,255,255,0.92);
-      border-radius: 18px;
-      padding: 22px 18px;
+      border-radius:18px;
+      padding:18px 16px 16px;
       box-shadow: 0 16px 40px rgba(0,0,0,0.15);
-      position: relative;
-      overflow: hidden;
-      text-align: center;
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+    }
+
+    /* Bear area */
+    .bear-wrap{
+      width:100%;
+      display:grid;
+      place-items:center;
+      margin: 4px 0 10px;
+    }
+    #bearImg{
+      width: 210px;
+      max-width: 70%;
+      height: auto;
+      image-rendering: auto;
+      animation: floaty 2.2s ease-in-out infinite;
+      transform-origin: 50% 60%;
+    }
+    @keyframes floaty{
+      0%,100%{ transform: translateY(0) }
+      50%{ transform: translateY(-6px) }
     }
 
     h1{
-      margin: 0 0 10px;
-      font-size: 22px;
+      margin: 6px 0 8px;
+      font-size: 20px;
       line-height: 1.25;
+      color: #c74a63;
+      transition: opacity .25s ease, transform .25s ease;
     }
-    p.sub{
-      margin: 0 0 18px;
-      opacity: 0.8;
-      font-size: 14px;
+    .hint{
+      margin: 0 0 12px;
+      font-size: 12px;
+      opacity: .75;
+      transition: opacity .25s ease, transform .25s ease;
     }
 
     .playArea{
-      position: relative;
+      position:relative;
       height: 150px;
       border-radius: 14px;
       background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.2));
       border: 1px solid rgba(0,0,0,0.06);
-      overflow: hidden;
-      display: grid;
-      place-items: center;
-      padding: 14px;
+      overflow:hidden;
     }
 
     .btn{
-      border: 0;
-      border-radius: 999px;
-      padding: 13px 22px;
+      border:0;
+      border-radius: 14px;
+      padding: 12px 18px;
       font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
+      font-weight: 900;
+      cursor:pointer;
+      user-select:none;
       touch-action: manipulation;
-      user-select: none;
     }
 
     #yesBtn{
+      position:absolute;
+      left:50%;
+      top: 18px;
+      transform: translateX(-50%);
       background: var(--pink);
-      color: #fff;
-      box-shadow: 0 10px 18px rgba(255,59,122,0.28);
+      color:#fff;
+      box-shadow: 0 12px 22px rgba(255,45,120,.30);
+    }
+    #yesBtn:active{
+      transform: translateX(-50%) scale(0.98);
     }
 
     #noBtn{
-      position: absolute;
-      left: 50%;
-      top: 92px;
+      position:absolute;
+      left:50%;
+      top: 90px;
       transform: translateX(-50%);
-      background: #e9e9ee;
-      color: #333;
-      box-shadow: 0 10px 18px rgba(0,0,0,0.08);
+      background:#e9e9ee;
+      color:#333;
+      box-shadow: 0 10px 18px rgba(0,0,0,0.10);
     }
 
-    .result{
+    /* Final text */
+    .finalText{
       display:none;
-      margin-top: 14px;
-      font-size: 20px;
-      font-weight: 800;
-      color: var(--pink);
-    }
-
-    .hint{
-      margin-top: 10px;
-      font-size: 12px;
-      opacity: 0.7;
-    }
-
-    .heart{
-      position: fixed;
-      left: 0;
-      top: 0;
+      margin: 14px 0 2px;
       font-size: 22px;
-      pointer-events: none;
-      animation: floatUp 2.8s ease-out forwards;
-      will-change: transform, opacity;
+      font-weight: 1000;
+      color: #c74a63;
+      letter-spacing: .2px;
     }
 
-    @keyframes floatUp{
-      0%   { transform: translate(var(--x), var(--y)) scale(0.9); opacity: 0; }
-      10%  { opacity: 1; }
-      100% { transform: translate(calc(var(--x) + var(--dx)), calc(var(--y) - 260px)) scale(1.25); opacity: 0; }
+    /* Acceptance animation */
+    .accepted h1,
+    .accepted .hint,
+    .accepted .playArea{
+      opacity:0;
+      transform: translateY(8px);
+      pointer-events:none;
+    }
+
+    /* Make the bear pop a bit when accepted */
+    .accepted #bearImg{
+      animation: pop 600ms ease both;
+    }
+    @keyframes pop{
+      0%{ transform: scale(1) }
+      60%{ transform: scale(1.05) }
+      100%{ transform: scale(1) }
+    }
+
+    /* Big YES takeover (simple, mobile-friendly) */
+    .takeover{
+      position: fixed;
+      inset: 0;
+      background: rgba(255,255,255,0.0);
+      display:none;
+      place-items:center;
+      z-index: 999;
+    }
+    .takeover.show{ display:grid; }
+
+    .bigYes{
+      width: 140px;
+      height: 60px;
+      border-radius: 14px;
+      background: var(--pink);
+      display:grid;
+      place-items:center;
+      color:#fff;
+      font-weight: 1000;
+      font-size: 22px;
+      box-shadow: 0 18px 40px rgba(255,45,120,.35);
+      animation: growToFill 900ms ease forwards;
+    }
+    @keyframes growToFill{
+      0%{ transform: scale(1) }
+      100%{ transform: scale(25) }
+    }
+
+    .accepted .finalText{
+      display:block;
+      animation: fadeIn 350ms ease both;
+      animation-delay: 250ms;
+    }
+    @keyframes fadeIn{
+      from{ opacity:0; transform: translateY(6px); }
+      to{ opacity:1; transform: translateY(0); }
     }
   </style>
 </head>
+
 <body>
-  <main class="card">
-    <h1>Would you like to be my Valentine? 💖</h1>
-    <p class="sub">Choose wisely 😄</p>
+  <main class="card" id="card">
+    <div class="bear-wrap">
+      <img id="bearImg" src="assets/IMG_8768.gif" alt="Cute bear holding flowers" />
+    </div>
+
+    <h1 id="question">Will you be my Valentine?</h1>
+    <div class="hint" id="hint">Tip: Try tapping “No” 😉</div>
 
     <section class="playArea" id="playArea" aria-label="Valentine choices">
       <button class="btn" id="yesBtn">Yes</button>
       <button class="btn" id="noBtn">No</button>
     </section>
 
-    <div class="result" id="result">I knew it! 💕</div>
-    <div class="hint" id="hint">Tip: Try tapping “No” 😉</div>
+    <div class="finalText" id="finalText">Knew you would say yes!</div>
   </main>
+
+  <!-- takeover layer for the big YES animation -->
+  <div class="takeover" id="takeover" aria-hidden="true">
+    <div class="bigYes">Yes</div>
+  </div>
 
   <script>
     const playArea = document.getElementById("playArea");
     const yesBtn   = document.getElementById("yesBtn");
     const noBtn    = document.getElementById("noBtn");
-    const result   = document.getElementById("result");
-    const hint     = document.getElementById("hint");
+    const bearImg  = document.getElementById("bearImg");
+    const takeover = document.getElementById("takeover");
+    const card     = document.getElementById("card");
 
-    // مهم للموبايل: اجعل "No" يهرب عند محاولة اللمس
-    function moveNo() {
+    // No button runs away (mobile)
+    function moveNo(){
       const area = playArea.getBoundingClientRect();
       const btn  = noBtn.getBoundingClientRect();
+      const pad = 10;
 
-      const pad = 10; // هامش أمان
-      const maxX = area.width  - btn.width  - pad * 2;
-      const maxY = area.height - btn.height - pad * 2;
-
-      // إذا كانت المساحة ضيقة جدًا
+      const maxX = area.width  - btn.width  - pad*2;
+      const maxY = area.height - btn.height - pad*2;
       if (maxX <= 0 || maxY <= 0) return;
 
       const x = pad + Math.random() * maxX;
       const y = pad + Math.random() * maxY;
 
-      // نضعه داخل playArea بالنسبة المطلقة
       noBtn.style.left = x + "px";
       noBtn.style.top  = y + "px";
       noBtn.style.transform = "none";
     }
 
-    // على iOS/Android: touchstart هو الأوثق
+    // Mobile-first: touchstart is most reliable
     noBtn.addEventListener("touchstart", (e) => {
-      e.preventDefault(); // يمنع الضغط الفعلي
+      e.preventDefault();
       moveNo();
-    }, { passive: false });
+    }, { passive:false });
 
-    // اجعل الضغط على "No" لا يفعل شيئًا حتى لو انضغط بالغلط
+    // Also guard against accidental click
     noBtn.addEventListener("click", (e) => {
       e.preventDefault();
       moveNo();
     });
 
-    function spawnHearts(count = 18) {
-      for (let i = 0; i < count; i++) {
-        const h = document.createElement("div");
-        h.className = "heart";
-        h.textContent = "❤️";
+    // YES flow: hide question/hint, do big animation, swap to kiss GIF, show final text only
+    yesBtn.addEventListener("click", async () => {
+      // Show takeover "Yes" grow animation
+      takeover.classList.add("show");
 
-        // نقطة بداية عشوائية حول البطاقة
-        const startX = Math.random() * window.innerWidth;
-        const startY = window.innerHeight - 40 - Math.random() * 80;
+      // Small delay so animation is visible
+      await new Promise(r => setTimeout(r, 650));
 
-        const dx = (Math.random() * 120 - 60) + "px";
+      // Switch bear to final kissing GIF + hide UI
+      bearImg.src = "assets/IMG_8767.gif";
+      document.body.classList.add("accepted");
 
-        h.style.setProperty("--x", startX + "px");
-        h.style.setProperty("--y", startY + "px");
-        h.style.setProperty("--dx", dx);
+      // Remove takeover layer after it finishes
+      await new Promise(r => setTimeout(r, 500));
+      takeover.classList.remove("show");
 
-        document.body.appendChild(h);
-        setTimeout(() => h.remove(), 3000);
-      }
-    }
-
-    yesBtn.addEventListener("click", () => {
-      // قفل الأزرار
+      // Optional: keep only bear + final text visible (tighten layout a bit)
       playArea.style.display = "none";
-      hint.style.display = "none";
-
-      // إظهار النتيجة + أنيميشن
-      result.style.display = "block";
-      spawnHearts(22);
     });
   </script>
 </body>
